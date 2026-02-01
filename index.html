@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LinuxMaster MM | 100 Commands Edition</title>
+    <title>LinuxMaster MM | Ultimate Edition</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -383,28 +383,33 @@
     </div>
 
     <script>
-        // --- 1. DATA STORE (FULL 100 COMMANDS) ---
+        // --- 1. DATA STORE (100+ COMMANDS with ADVANCED UPDATES) ---
         const categories = [
             { id: 'all', label: './Show_All' },
-            { id: 'file', label: './File_System' },
-            { id: 'network', label: './Network_Ops' },
-            { id: 'permission', label: './Permissions' },
-            { id: 'system', label: './System_Info' },
-            { id: 'process', label: './Processes' },
-            { id: 'package', label: './Packages' },
-            { id: 'text', label: './Text_Utils' },
-            { id: 'misc', label: './Power_Tools' }
+            { id: 'file', label: './File_Ops' },
+            { id: 'network', label: './Network' },
+            { id: 'permission', label: './Permission' },
+            { id: 'system', label: './System' },
+            { id: 'process', label: './Process' },
+            { id: 'package', label: './Package' },
+            { id: 'text', label: './Text_Util' },
+            { id: 'dev', label: './Dev_Ops' },
+            { id: 'misc', label: './Power_Tool' }
         ];
 
         const commands = [
-            // --- FILE OPERATIONS (24) ---
-            { id: 'ls', name: 'ls', category: 'file', description_mm: 'ဖိုင်များကြည့်ရန်။ (Tip: `ls -lah` သည် size နှင့် hidden files များကိုပါ ပြသည်။)', description_en: 'List directory contents.', template: 'ls -{0} {1}', params: [{ label: 'Flags', placeholder: 'lah' }, { label: 'Path', placeholder: '.' }] },
+            // --- FILE OPERATIONS ---
+            { id: 'ls', name: 'ls', category: 'file', description_mm: 'ဖိုင်များကြည့်ရန် (Size နှင့် Hidden file ပါကြည့်မည့် Advance နည်း)။', description_en: 'List directory contents.', template: 'ls -lah {0}', params: [{ label: 'Path', placeholder: '.' }] },
             { id: 'cd', name: 'cd', category: 'file', description_mm: 'ဖိုဒါပြောင်းရန်။ (Tip: `cd -` သည် ယခင်ဖိုဒါသို့ ပြန်သွားသည်။)', description_en: 'Change directory.', template: 'cd {0}', params: [{ label: 'Path', placeholder: '/var/www' }] },
             { id: 'pwd', name: 'pwd', category: 'file', description_mm: 'လက်ရှိ လမ်းကြောင်းအပြည့်အစုံကို ကြည့်ရန်။', description_en: 'Print working directory.', template: 'pwd', params: [] },
             { id: 'mkdir', name: 'mkdir', category: 'file', description_mm: 'ဖိုဒါဆောက်ရန်။ (Tip: `-p` သည် ဖိုဒါအထပ်ထပ်ကို တစ်ခါတည်းဆောက်သည်။)', description_en: 'Create directory.', template: 'mkdir -p {0}', params: [{ label: 'Path', placeholder: 'new/folder/path' }] },
             { id: 'rmdir', name: 'rmdir', category: 'file', description_mm: 'အလွတ်ဖြစ်နေသော ဖိုဒါများကို ဖျက်ရန်။', description_en: 'Remove empty directory.', template: 'rmdir {0}', params: [{ label: 'Folder', placeholder: 'empty_folder' }] },
             { id: 'touch', name: 'touch', category: 'file', description_mm: 'ဖိုင်အလွတ်ဆောက်ရန် (သို့) timestamp ပြင်ရန်။', description_en: 'Create file.', template: 'touch {0}', params: [{ label: 'Filename', placeholder: 'style.css' }] },
+            
+            // ** ADVANCED RSYNC INSTEAD OF SIMPLE CP **
             { id: 'cp', name: 'cp', category: 'file', description_mm: 'ဖိုင်ကူးယူရန်။', description_en: 'Copy files.', template: 'cp {0} {1}', params: [{ label: 'Source', placeholder: 'file.txt' }, { label: 'Dest', placeholder: 'file_copy.txt' }] },
+            { id: 'rsync_adv', name: 'rsync (Adv)', category: 'file', description_mm: 'ဖိုင်အများကြီးကို Copy ကူးရာတွင် ပြတ်တောက်သွားပါက ပြန်ဆက်နိုင်ပြီး Progress bar ပါပြသည်။', description_en: 'Advanced copy/sync.', template: 'rsync -avz --progress {0} {1}', params: [{ label: 'Source', placeholder: './data/' }, { label: 'Dest', placeholder: '/backup/data/' }] },
+            
             { id: 'cp_r', name: 'cp -r', category: 'file', description_mm: 'ဖိုဒါတစ်ခုလုံး ကူးယူရန်။', description_en: 'Copy directory recursively.', template: 'cp -r {0} {1}', params: [{ label: 'Src Folder', placeholder: 'src' }, { label: 'Dst Folder', placeholder: 'dest' }] },
             { id: 'mv', name: 'mv', category: 'file', description_mm: 'ဖိုင်ရွှေ့ရန် သို့မဟုတ် နာမည်ပြောင်းရန်။', description_en: 'Move/Rename.', template: 'mv {0} {1}', params: [{ label: 'Old', placeholder: 'old.txt' }, { label: 'New', placeholder: 'new.txt' }] },
             { id: 'rm', name: 'rm', category: 'file', description_mm: 'ဖိုင်ဖျက်ရန်။', description_en: 'Remove file.', template: 'rm {0}', params: [{ label: 'File', placeholder: 'junk.txt' }] },
@@ -420,34 +425,39 @@
             { id: 'vim', name: 'vim', category: 'file', description_mm: 'Pro များသုံးသော Text Editor။ (ထွက်ချင်လျှင် :q! ရိုက်ပါ)', description_en: 'Advanced editor.', template: 'vim {0}', params: [{ label: 'File', placeholder: 'script.py' }] },
             { id: 'file', name: 'file', category: 'file', description_mm: 'ဖိုင်အမျိုးအစားကို စစ်ဆေးရန် (Image လား Text လား စသဖြင့်)။', description_en: 'Determine file type.', template: 'file {0}', params: [{ label: 'Filename', placeholder: 'unknown.data' }] },
             { id: 'wc', name: 'wc', category: 'file', description_mm: 'စာကြောင်းရေ၊ စကားလုံးရေ တွက်ရန်။', description_en: 'Word count.', template: 'wc -l {0}', params: [{ label: 'File', placeholder: 'data.csv' }] },
-            { id: 'ln_s', name: 'ln -s', category: 'file', description_mm: 'Shortcut (Symlink) ဖန်တီးရန်။', description_en: 'Create symlink.', template: 'ln -s {0} {1}', params: [{ label: 'Real File', placeholder: '/opt/app' }, { label: 'Link Name', placeholder: '/usr/bin/app' }] },
-            { id: 'find', name: 'find', category: 'file', description_mm: 'ဖိုင်များကို အသေးစိတ်ရှာဖွေရန်။', description_en: 'Search files.', template: 'find {0} -name {1}', params: [{ label: 'Path', placeholder: '.' }, { label: 'Pattern', placeholder: '*.js' }] },
             
-            // --- NETWORK (16) ---
+            // ** ADVANCED FIND & SYMLINK **
+            { id: 'ln_s', name: 'ln -s', category: 'file', description_mm: 'Shortcut (Symlink) ဖန်တီးရန်။', description_en: 'Create symlink.', template: 'ln -s {0} {1}', params: [{ label: 'Real File', placeholder: '/opt/app' }, { label: 'Link Name', placeholder: '/usr/bin/app' }] },
+            { id: 'find_exec', name: 'find -exec', category: 'file', description_mm: 'ဖိုင်ရှာပြီးတာနဲ့ တွေ့တဲ့ဖိုင်တွေကို Command တစ်ခုခု တန်းလုပ်ခိုင်းရန် (Pro Level)။', description_en: 'Find and execute command.', template: 'find {0} -name "{1}" -exec {2} \\;', params: [{ label: 'Path', placeholder: '.' }, { label: 'Pattern', placeholder: '*.log' }, { label: 'Command (e.g. rm)', placeholder: 'rm' }] },
+            
+            // --- NETWORK ---
             { id: 'ping', name: 'ping', category: 'network', description_mm: 'Connection မိမမိ စစ်ရန်။', description_en: 'Check host availability.', template: 'ping -c {0} {1}', params: [{ label: 'Count', placeholder: '4' }, { label: 'Host', placeholder: '8.8.8.8' }] },
             { id: 'curl', name: 'curl', category: 'network', description_mm: 'Web Request ပို့ရန်။', description_en: 'Transfer data.', template: 'curl -X {0} {1}', params: [{ label: 'Method', placeholder: 'GET' }, { label: 'URL', placeholder: 'http://localhost' }] },
             { id: 'curl_head', name: 'curl -I', category: 'network', description_mm: 'Website Header ကိုသာ စစ်ရန်။', description_en: 'Fetch headers.', template: 'curl -I {0}', params: [{ label: 'URL', placeholder: 'https://google.com' }] },
             { id: 'wget', name: 'wget', category: 'network', description_mm: 'Direct Link မှ ဖိုင်ဒေါင်းရန်။', description_en: 'Download file.', template: 'wget {0}', params: [{ label: 'Link', placeholder: 'https://example.com/file.zip' }] },
-            { id: 'ifconfig', name: 'ifconfig', category: 'network', description_mm: 'Network Config ကြည့်ရန် (Old way)။', description_en: 'Interface config.', template: 'ifconfig', params: [] },
             { id: 'ip_a', name: 'ip a', category: 'network', description_mm: 'IP Address ကြည့်ရန် (Modern way)။', description_en: 'Show IP info.', template: 'ip a', params: [] },
-            { id: 'netstat', name: 'netstat', category: 'network', description_mm: 'Port များဖွင့်ထားခြင်း ရှိမရှိ စစ်ရန်။', description_en: 'Network statistics.', template: 'netstat -tuln', params: [] },
+            
+            // ** ADVANCED NETWORKING **
+            { id: 'netstat_adv', name: 'netstat (Adv)', category: 'network', description_mm: 'Port ဖွင့်ထားတဲ့ Program ရဲ့ PID ကိုပါ ရှာပေးမယ့် Command။', description_en: 'Show ports and PIDs.', template: 'sudo netstat -tulpn | grep {0}', params: [{ label: 'Port', placeholder: '80' }] },
             { id: 'ss', name: 'ss', category: 'network', description_mm: 'Netstat ထက်မြန်သော Socket စစ်ဆေးသည့် tool။', description_en: 'Socket stats.', template: 'ss -tuln', params: [] },
+            
+            // ** ADVANCED SSH **
             { id: 'ssh', name: 'ssh', category: 'network', description_mm: 'Remote Server သို့ဝင်ရန်။', description_en: 'SSH Login.', template: 'ssh {0}@{1}', params: [{ label: 'User', placeholder: 'root' }, { label: 'IP', placeholder: '192.168.1.5' }] },
+            { id: 'ssh_tunnel', name: 'ssh -L (Tunnel)', category: 'network', description_mm: 'Local port forwarding လုပ်ရန် (Database များကို အဝေးမှ လှမ်းချိတ်ရာတွင် သုံးသည်)။', description_en: 'SSH Port Forwarding.', template: 'ssh -L {0}:localhost:{1} {2}@{3}', params: [{ label: 'Local Port', placeholder: '3307' }, { label: 'Remote DB Port', placeholder: '3306' }, { label: 'User', placeholder: 'root' }, { label: 'Server IP', placeholder: '1.2.3.4' }] },
+            
             { id: 'scp', name: 'scp', category: 'network', description_mm: 'Network မှတစ်ဆင့် ဖိုင်ကူးရန်။', description_en: 'Secure copy.', template: 'scp {0} {1}@{2}:{3}', params: [{ label: 'File', placeholder: 'backup.tar' }, { label: 'User', placeholder: 'root' }, { label: 'IP', placeholder: '1.2.3.4' }, { label: 'Dest', placeholder: '/home/backup' }] },
             { id: 'nslookup', name: 'nslookup', category: 'network', description_mm: 'Domain name မှ IP ရှာရန်။', description_en: 'DNS lookup.', template: 'nslookup {0}', params: [{ label: 'Domain', placeholder: 'google.com' }] },
             { id: 'dig', name: 'dig', category: 'network', description_mm: 'DNS Record များကို အသေးစိတ်စစ်ရန်။', description_en: 'DNS info.', template: 'dig {0}', params: [{ label: 'Domain', placeholder: 'example.com' }] },
             { id: 'traceroute', name: 'traceroute', category: 'network', description_mm: 'Connection လမ်းကြောင်းလိုက်ရန်။', description_en: 'Trace packets.', template: 'traceroute {0}', params: [{ label: 'Host', placeholder: '8.8.8.8' }] },
-            { id: 'nmap', name: 'nmap', category: 'network', description_mm: 'Security စစ်ဆေးရန် Port များကို Scan ဖတ်ခြင်း။', description_en: 'Network exploration.', template: 'nmap {0}', params: [{ label: 'Target IP', placeholder: '192.168.1.1' }] },
-            { id: 'hostname', name: 'hostname', category: 'network', description_mm: 'စက်၏ နာမည်ကိုကြည့်ရန်။', description_en: 'Show hostname.', template: 'hostname', params: [] },
+            { id: 'nmap', name: 'nmap', category: 'network', description_mm: 'Security စစ်ဆေးရန် Port များကို Scan ဖတ်ခြင်း။', description_en: 'Network exploration.', template: 'nmap -A {0}', params: [{ label: 'Target IP', placeholder: '192.168.1.1' }] },
             { id: 'hostname_i', name: 'hostname -I', category: 'network', description_mm: 'စက်၏ IP ကို အမြန်ကြည့်ရန်။', description_en: 'Show IP address.', template: 'hostname -I', params: [] },
 
-            // --- SYSTEM INFO (15) ---
+            // --- SYSTEM INFO ---
             { id: 'df', name: 'df', category: 'system', description_mm: 'Disk Space ကြည့်ရန်။', description_en: 'Disk Free.', template: 'df -h', params: [] },
             { id: 'du', name: 'du', category: 'system', description_mm: 'Folder တစ်ခု၏ Size ကိုကြည့်ရန်။', description_en: 'Disk Usage.', template: 'du -sh {0}', params: [{ label: 'Path', placeholder: '.' }] },
             { id: 'free', name: 'free', category: 'system', description_mm: 'RAM လက်ကျန်ကြည့်ရန်။', description_en: 'Memory usage.', template: 'free -m', params: [] },
             { id: 'top', name: 'top', category: 'system', description_mm: 'System Monitor (CPU/RAM)။', description_en: 'Task manager.', template: 'top', params: [] },
             { id: 'htop', name: 'htop', category: 'system', description_mm: 'Top ထက်ပိုလှသော Monitor Tool။', description_en: 'Interactive viewer.', template: 'htop', params: [] },
-            { id: 'uname', name: 'uname', category: 'system', description_mm: 'Kernel Version ကြည့်ရန်။', description_en: 'System info.', template: 'uname -r', params: [] },
             { id: 'uname_a', name: 'uname -a', category: 'system', description_mm: 'System အချက်အလက်အစုံကြည့်ရန်။', description_en: 'All system info.', template: 'uname -a', params: [] },
             { id: 'uptime', name: 'uptime', category: 'system', description_mm: 'စက်ဖွင့်ထားတာ ဘယ်လောက်ကြာပြီလဲ။', description_en: 'Show runtime.', template: 'uptime', params: [] },
             { id: 'whoami', name: 'whoami', category: 'system', description_mm: 'လက်ရှိ User နာမည်ကြည့်ရန်။', description_en: 'Current user.', template: 'whoami', params: [] },
@@ -458,7 +468,7 @@
             { id: 'cal', name: 'cal', category: 'system', description_mm: 'ပြက္ခဒိန်ကြည့်ရန်။', description_en: 'Calendar.', template: 'cal', params: [] },
             { id: 'lscpu', name: 'lscpu', category: 'system', description_mm: 'CPU အချက်အလက်များကြည့်ရန်။', description_en: 'CPU info.', template: 'lscpu', params: [] },
 
-            // --- PROCESS MANAGEMENT (10) ---
+            // --- PROCESS MANAGEMENT ---
             { id: 'ps', name: 'ps', category: 'process', description_mm: 'Process များကြည့်ရန်။', description_en: 'Snapshot of processes.', template: 'ps aux', params: [] },
             { id: 'grep_ps', name: 'ps | grep', category: 'process', description_mm: 'Process တစ်ခုကို နာမည်ဖြင့်ရှာရန်။', description_en: 'Find process.', template: 'ps aux | grep {0}', params: [{ label: 'Name', placeholder: 'nginx' }] },
             { id: 'kill', name: 'kill', category: 'process', description_mm: 'Process ကို PID ဖြင့် ပိတ်ရန်။', description_en: 'Kill process.', template: 'kill {0}', params: [{ label: 'PID', placeholder: '1234' }] },
@@ -466,31 +476,39 @@
             { id: 'killall', name: 'killall', category: 'process', description_mm: 'Process အားလုံးကို နာမည်ဖြင့်ပိတ်ရန်။', description_en: 'Kill by name.', template: 'killall {0}', params: [{ label: 'Name', placeholder: 'chrome' }] },
             { id: 'bg', name: 'bg', category: 'process', description_mm: 'Job ကို Background သို့ပို့ရန်။', description_en: 'Background job.', template: 'bg', params: [] },
             { id: 'fg', name: 'fg', category: 'process', description_mm: 'Background job ကို ရှေ့ပြန်ခေါ်ရန်။', description_en: 'Foreground job.', template: 'fg', params: [] },
+            
+            // ** ADVANCED SYSTEMCTL **
             { id: 'systemctl_start', name: 'systemctl start', category: 'process', description_mm: 'Service တစ်ခုစတင်ရန်။', description_en: 'Start service.', template: 'sudo systemctl start {0}', params: [{ label: 'Service', placeholder: 'apache2' }] },
-            { id: 'systemctl_stop', name: 'systemctl stop', category: 'process', description_mm: 'Service ရပ်တန့်ရန်။', description_en: 'Stop service.', template: 'sudo systemctl stop {0}', params: [{ label: 'Service', placeholder: 'apache2' }] },
             { id: 'systemctl_status', name: 'systemctl status', category: 'process', description_mm: 'Service အခြေအနေစစ်ရန်။', description_en: 'Service status.', template: 'systemctl status {0}', params: [{ label: 'Service', placeholder: 'mysql' }] },
+            { id: 'journalctl_f', name: 'journalctl (Log)', category: 'process', description_mm: 'Service Log များကို Real-time ကြည့်ရန် (Advanced Debugging)။', description_en: 'Follow service logs.', template: 'sudo journalctl -fu {0}', params: [{ label: 'Service Name', placeholder: 'nginx' }] },
 
-            // --- PERMISSIONS & USERS (10) ---
+            // --- PERMISSIONS & USERS ---
             { id: 'chmod', name: 'chmod', category: 'permission', description_mm: 'ဖိုင် Permission ပြောင်းရန်။ (e.g. 777, +x)', description_en: 'Change mode.', template: 'chmod {0} {1}', params: [{ label: 'Mode', placeholder: '+x' }, { label: 'File', placeholder: 'script.sh' }] },
             { id: 'chown', name: 'chown', category: 'permission', description_mm: 'Owner ပြောင်းရန်။', description_en: 'Change owner.', template: 'chown {0} {1}', params: [{ label: 'User', placeholder: 'root' }, { label: 'File', placeholder: 'data.txt' }] },
             { id: 'chgrp', name: 'chgrp', category: 'permission', description_mm: 'Group ပြောင်းရန်။', description_en: 'Change group.', template: 'chgrp {0} {1}', params: [{ label: 'Group', placeholder: 'www-data' }, { label: 'File', placeholder: 'data.txt' }] },
             { id: 'sudo', name: 'sudo', category: 'permission', description_mm: 'Admin rights ဖြင့် run ရန်။', description_en: 'Superuser do.', template: 'sudo {0}', params: [{ label: 'Command', placeholder: 'apt update' }] },
             { id: 'su', name: 'su', category: 'permission', description_mm: 'User အကောင့် ပြောင်းရန်။', description_en: 'Switch user.', template: 'su - {0}', params: [{ label: 'Username', placeholder: 'root' }] },
             { id: 'passwd', name: 'passwd', category: 'permission', description_mm: 'Password ပြောင်းရန်။', description_en: 'Change password.', template: 'passwd {0}', params: [{ label: 'User', placeholder: 'username' }] },
-            { id: 'useradd', name: 'useradd', category: 'permission', description_mm: 'User အသစ်ထည့်ရန်။', description_en: 'Create user.', template: 'sudo useradd -m {0}', params: [{ label: 'Username', placeholder: 'john' }] },
+            
+            // ** ADVANCED USER MANAGEMENT **
+            { id: 'useradd_adv', name: 'useradd (Pro)', category: 'permission', description_mm: 'User အသစ်ကို Home folder, Shell နှင့် Group များပါ တစ်ခါတည်း သတ်မှတ်ပြီး ဆောက်ရန်။', description_en: 'Create user advanced.', template: 'sudo useradd -m -s {0} -G {1} {2}', params: [{ label: 'Shell (e.g. /bin/bash)', placeholder: '/bin/bash' }, { label: 'Groups (e.g. sudo)', placeholder: 'sudo' }, { label: 'Username', placeholder: 'newuser' }] },
+            { id: 'usermod_add', name: 'usermod -aG', category: 'permission', description_mm: 'ရှိပြီးသား User ကို Group အသစ်တစ်ခုထဲ ထပ်ထည့်ရန်။', description_en: 'Add user to group.', template: 'sudo usermod -aG {0} {1}', params: [{ label: 'Group Name', placeholder: 'docker' }, { label: 'Username', placeholder: 'john' }] },
+            
             { id: 'userdel', name: 'userdel', category: 'permission', description_mm: 'User ဖျက်ရန်။', description_en: 'Delete user.', template: 'sudo userdel {0}', params: [{ label: 'Username', placeholder: 'john' }] },
             { id: 'groupadd', name: 'groupadd', category: 'permission', description_mm: 'Group အသစ်ဆောက်ရန်။', description_en: 'Add group.', template: 'sudo groupadd {0}', params: [{ label: 'Group', placeholder: 'developers' }] },
             { id: 'visudo', name: 'visudo', category: 'permission', description_mm: 'Sudoers ဖိုင်ကို ပြင်ရန် (အန္တရာယ်ကင်းသောနည်း)။', description_en: 'Edit sudoers.', template: 'sudo visudo', params: [] },
 
-            // --- PACKAGES (APT/DPKG) (5) ---
+            // --- PACKAGES (APT/DPKG) ---
             { id: 'apt_update', name: 'apt update', category: 'package', description_mm: 'Package list များကို refresh လုပ်ရန်။', description_en: 'Update lists.', template: 'sudo apt update', params: [] },
             { id: 'apt_upgrade', name: 'apt upgrade', category: 'package', description_mm: 'Software များကို version မြှင့်ရန်။', description_en: 'Upgrade pkgs.', template: 'sudo apt upgrade', params: [] },
             { id: 'apt_install', name: 'apt install', category: 'package', description_mm: 'Software အသစ်သွင်းရန်။', description_en: 'Install pkg.', template: 'sudo apt install {0}', params: [{ label: 'Package', placeholder: 'git' }] },
             { id: 'apt_remove', name: 'apt remove', category: 'package', description_mm: 'Software ဖျက်ရန်။', description_en: 'Remove pkg.', template: 'sudo apt remove {0}', params: [{ label: 'Package', placeholder: 'vim' }] },
             { id: 'dpkg_i', name: 'dpkg -i', category: 'package', description_mm: '.deb ဖိုင်ကို install လုပ်ရန်။', description_en: 'Install .deb.', template: 'sudo dpkg -i {0}', params: [{ label: 'File', placeholder: 'package.deb' }] },
 
-            // --- TEXT UTILS (10) ---
+            // --- TEXT UTILS & ADVANCED GREP ---
             { id: 'grep', name: 'grep', category: 'text', description_mm: 'စာသားရှာရန်။', description_en: 'Global regex print.', template: 'grep "{0}" {1}', params: [{ label: 'Text', placeholder: 'error' }, { label: 'File', placeholder: 'log.txt' }] },
+            { id: 'grep_adv', name: 'grep (Pro)', category: 'text', description_mm: 'စာသားကို ဖိုဒါအောက်အထိလိုက်ရှာပြီး စာကြောင်းရေပါ ဖော်ပြပေးရန် (Coding debug လုပ်ရန် ရှယ်ကောင်း)။', description_en: 'Recusive search with line nums.', template: 'grep -rnP "{0}" {1}', params: [{ label: 'Search Pattern', placeholder: 'function login' }, { label: 'Path', placeholder: '.' }] },
+            
             { id: 'awk', name: 'awk', category: 'text', description_mm: 'Column လိုက် စာသားဖြတ်ရန် အသုံးဝင်သည်။', description_en: 'Text processing.', template: "awk '{print ${0}}' {1}", params: [{ label: 'Column No', placeholder: '1' }, { label: 'File', placeholder: 'data.csv' }] },
             { id: 'sed', name: 'sed', category: 'text', description_mm: 'စာသားအစားထိုးရန် (Find & Replace)။', description_en: 'Stream editor.', template: 'sed "s/{0}/{1}/g" {2}', params: [{ label: 'Old', placeholder: 'foo' }, { label: 'New', placeholder: 'bar' }, { label: 'File', placeholder: 'text.txt' }] },
             { id: 'sort', name: 'sort', category: 'text', description_mm: 'A-Z စီရန်။', description_en: 'Sort text.', template: 'sort {0}', params: [{ label: 'File', placeholder: 'names.txt' }] },
@@ -501,9 +519,20 @@
             { id: 'diff', name: 'diff', category: 'text', description_mm: 'ဖိုင်နှစ်ခု ကွာခြားချက်ကို ရှာရန်။', description_en: 'Compare files.', template: 'diff {0} {1}', params: [{ label: 'File1', placeholder: 'v1.txt' }, { label: 'File2', placeholder: 'v2.txt' }] },
             { id: 'tr', name: 'tr', category: 'text', description_mm: 'စာလုံးအကြီးအသေး ပြောင်းရန်။', description_en: 'Translate chars.', template: 'cat {0} | tr "[a-z]" "[A-Z]"', params: [{ label: 'File', placeholder: 'lower.txt' }] },
 
-            // --- MISC / POWER TOOLS (10) ---
+            // --- DEV OPS (DOCKER ADDED) ---
+            { id: 'docker_run', name: 'docker run', category: 'dev', description_mm: 'Container တစ်ခုကို Port map, Volume map လုပ်ပြီး Run ရန်။', description_en: 'Run container.', template: 'docker run -d -p {0}:{1} -v {2}:{3} --name {4} {5}', params: [{ label: 'Host Port', placeholder: '8080' }, { label: 'Container Port', placeholder: '80' }, { label: 'Host Path', placeholder: './data' }, { label: 'Container Path', placeholder: '/app/data' }, { label: 'Container Name', placeholder: 'my-app' }, { label: 'Image', placeholder: 'nginx:latest' }] },
+            { id: 'docker_exec', name: 'docker exec', category: 'dev', description_mm: 'Run နေသော Container ထဲသို့ ဝင်ရောက်ရန်။', description_en: 'Enter container shell.', template: 'docker exec -it {0} /bin/bash', params: [{ label: 'Container ID/Name', placeholder: 'my-app' }] },
+            { id: 'docker_logs', name: 'docker logs', category: 'dev', description_mm: 'Container ၏ Log များကို ကြည့်ရန်။', description_en: 'Show container logs.', template: 'docker logs -f --tail {0} {1}', params: [{ label: 'Lines', placeholder: '100' }, { label: 'Container Name', placeholder: 'my-db' }] },
+            { id: 'git_clone', name: 'git clone', category: 'dev', description_mm: 'Source code ကို download ဆွဲရန်။', description_en: 'Clone repo.', template: 'git clone {0}', params: [{ label: 'URL', placeholder: 'https://github.com/user/repo.git' }] },
+            { id: 'git_status', name: 'git status', category: 'dev', description_mm: 'File အခြေအနေစစ်ရန်။', description_en: 'Check status.', template: 'git status', params: [] },
+
+            // --- MISC / POWER TOOLS ---
             { id: 'tar_c', name: 'tar create', category: 'misc', description_mm: 'Zip ချုံ့ရန် (Compress)။', description_en: 'Archive.', template: 'tar -czvf {0} {1}', params: [{ label: 'Name', placeholder: 'backup.tar.gz' }, { label: 'Folder', placeholder: 'data/' }] },
             { id: 'tar_x', name: 'tar extract', category: 'misc', description_mm: 'Zip ဖြည်ရန် (Extract)။', description_en: 'Extract.', template: 'tar -xzvf {0}', params: [{ label: 'File', placeholder: 'backup.tar.gz' }] },
+            
+            // ** ADVANCED TAR EXCLUDE **
+            { id: 'tar_exclude', name: 'tar (Exclude)', category: 'misc', description_mm: 'Backup လုပ်ရာတွင် မလိုချင်သော ဖိုဒါများ (node_modules, .git) ကို ဖယ်ထုတ်ပြီး Zip ချုံ့ရန်။', description_en: 'Archive excluding folders.', template: 'tar -czvf {0} --exclude={1} {2}', params: [{ label: 'Output Name', placeholder: 'backup.tar.gz' }, { label: 'Exclude Pattern', placeholder: 'node_modules' }, { label: 'Target Folder', placeholder: '.' }] },
+            
             { id: 'zip', name: 'zip', category: 'misc', description_mm: '.zip ဖိုင် ချုံ့ရန်။', description_en: 'Zip files.', template: 'zip -r {0} {1}', params: [{ label: 'Name.zip', placeholder: 'code.zip' }, { label: 'Folder', placeholder: 'src/' }] },
             { id: 'unzip', name: 'unzip', category: 'misc', description_mm: '.zip ဖိုင် ဖြည်ရန်။', description_en: 'Unzip files.', template: 'unzip {0}', params: [{ label: 'File', placeholder: 'code.zip' }] },
             { id: 'clear', name: 'clear', category: 'misc', description_mm: 'Terminal မျက်နှာပြင် ရှင်းလင်းရန်။', description_en: 'Clear screen.', template: 'clear', params: [] },
