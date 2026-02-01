@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinuxMaster MM | 100 Commands Edition</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. THEME: DARK TERMINAL (UNCHANGED) --- */
+        :root {
+            --bg-color: #0c0c0c;
+            --sidebar-bg: #111111;
+            --card-bg: #1a1a1a;
+            --text-main: #e0e0e0;
+            --text-muted: #888888;
+            
+            /* Hacker Green Accent */
+            --accent-color: #00ff41; 
+            --accent-dim: rgba(0, 255, 65, 0.1);
+            --border-color: #333333;
+            
+            --font-main: 'JetBrains Mono', monospace;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+
+        .hidden { display: none !important; }
+
+        /* --- 2. LAYOUT --- */
+        .app-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Blinking Cursor Effect */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: var(--accent-color);
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .category-nav ul { list-style: none; }
+        .category-nav li { margin-bottom: 5px; }
+
+        .category-btn {
+            width: 100%;
+            text-align: left;
+            padding: 10px 15px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-family: var(--font-main);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .category-btn:hover {
+            color: var(--accent-color);
+            border-left: 2px solid var(--accent-color);
+            padding-left: 20px;
+        }
+
+        .category-btn.active {
+            background: var(--accent-dim);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 10px var(--accent-dim);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            position: relative;
+            background-image: radial-gradient(#222 1px, transparent 1px);
+            background-size: 20px 20px; /* Dot grid pattern */
+        }
+
+        .top-bar {
+            position: sticky;
+            top: 0;
+            background: rgba(12, 12, 12, 0.95);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            z-index: 10;
+        }
+
+        .search-wrapper { position: relative; max-width: 600px; }
+
+        #search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            background: black;
+            border: 1px solid var(--border-color);
+            color: var(--accent-color);
+            font-family: var(--font-code);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        #search-input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 8px var(--accent-dim);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            width: 18px;
+        }
+
+        .content-body { padding: 2rem; }
+        .content-body h2 { 
+            margin-bottom: 1.5rem; 
+            font-size: 1.2rem; 
+            color: white; 
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* --- 3. TERMINAL CARDS --- */
+        .command-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .command-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-4px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .command-card::before {
+            content: '>';
+            position: absolute;
+            top: 1.5rem; left: 1rem;
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        .card-header {
+            margin-bottom: 0.75rem;
+            margin-left: 1.5rem; /* Space for the > */
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cmd-name {
+            font-family: var(--font-code);
+            font-size: 1.2rem;
+            color: white;
+            font-weight: 700;
+        }
+
+        .cmd-tag {
+            font-size: 0.7rem;
+            border: 1px solid #444;
+            padding: 2px 6px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .cmd-desc {
+            color: #bbb;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            margin-left: 1.5rem;
+        }
+
+        .cmd-syntax {
+            background: black;
+            border: 1px solid #333;
+            padding: 8px;
+            font-family: var(--font-code);
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            margin-left: 1.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* --- 4. MODAL / GENERATOR --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: #111;
+            width: 100%;
+            max-width: 650px;
+            border: 2px solid var(--accent-color);
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 0 30px var(--accent-dim);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem; right: 1rem;
+            background: none; border: none;
+            color: var(--accent-color);
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .gen-header h3 {
+            color: var(--accent-color);
+            font-family: var(--font-code);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .gen-header p { color: #888; margin-bottom: 2rem; font-style: italic; }
+
+        .input-group label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            background: black;
+            border: 1px solid #444;
+            color: white;
+            font-family: var(--font-code);
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .code-preview {
+            background: black;
+            border: 1px dashed var(--accent-color);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .code-preview code {
+            color: var(--accent-color);
+            font-family: var(--font-code);
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-color);
+            color: black;
+            border: none;
+            padding: 8px 16px;
+            font-weight: bold;
+            font-family: var(--font-main);
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 15px var(--accent-color);
+            background: white;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .app-container { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="brand">
+                <span>root@linux</span><span class="cursor"></span>
+            </div>
+            <nav class="category-nav">
+                <ul id="category-list">
+                    </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-wrapper">
+                    <span class="search-icon">#</span>
+                    <input type="text" id="search-input" placeholder="grep 'command_name'...">
+                </div>
+            </header>
+
+            <div class="content-body">
+                <h2 id="section-title">/bin/all_commands</h2>
+                <div id="command-grid" class="command-grid">
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="generator-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal" class="close-btn">&times;</button>
+            <div id="generator-container">
+                </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. DATA STORE (FULL 100 COMMANDS) ---
+        const categories = [
+            { id: 'all', label: './Show_All' },
+            { id: 'file', label: './File_System' },
+            { id: 'network', label: './Network_Ops' },
+            { id: 'permission', label: './Permissions' },
+            { id: 'system', label: './System_Info' },
+            { id: 'process', label: './Processes' },
+            { id: 'package', label: './Packages' },
+            { id: 'text', label: './Text_Utils' },
+            { id: 'misc', label: './Power_Tools' }
+        ];
+
+        const commands = [
+            // --- FILE OPERATIONS (24) ---
+            { id: 'ls', name: 'ls', category: 'file', description_mm: 'ဖိုင်များကြည့်ရန်။ (Tip: `ls -lah` သည် size နှင့် hidden files များကိုပါ ပြသည်။)', description_en: 'List directory contents.', template: 'ls -{0} {1}', params: [{ label: 'Flags', placeholder: 'lah' }, { label: 'Path', placeholder: '.' }] },
+            { id: 'cd', name: 'cd', category: 'file', description_mm: 'ဖိုဒါပြောင်းရန်။ (Tip: `cd -` သည် ယခင်ဖိုဒါသို့ ပြန်သွားသည်။)', description_en: 'Change directory.', template: 'cd {0}', params: [{ label: 'Path', placeholder: '/var/www' }] },
+            { id: 'pwd', name: 'pwd', category: 'file', description_mm: 'လက်ရှိ လမ်းကြောင်းအပြည့်အစုံကို ကြည့်ရန်။', description_en: 'Print working directory.', template: 'pwd', params: [] },
+            { id: 'mkdir', name: 'mkdir', category: 'file', description_mm: 'ဖိုဒါဆောက်ရန်။ (Tip: `-p` သည် ဖိုဒါအထပ်ထပ်ကို တစ်ခါတည်းဆောက်သည်။)', description_en: 'Create directory.', template: 'mkdir -p {0}', params: [{ label: 'Path', placeholder: 'new/folder/path' }] },
+            { id: 'rmdir', name: 'rmdir', category: 'file', description_mm: 'အလွတ်ဖြစ်နေသော ဖိုဒါများကို ဖျက်ရန်။', description_en: 'Remove empty directory.', template: 'rmdir {0}', params: [{ label: 'Folder', placeholder: 'empty_folder' }] },
+            { id: 'touch', name: 'touch', category: 'file', description_mm: 'ဖိုင်အလွတ်ဆောက်ရန် (သို့) timestamp ပြင်ရန်။', description_en: 'Create file.', template: 'touch {0}', params: [{ label: 'Filename', placeholder: 'style.css' }] },
+            { id: 'cp', name: 'cp', category: 'file', description_mm: 'ဖိုင်ကူးယူရန်။', description_en: 'Copy files.', template: 'cp {0} {1}', params: [{ label: 'Source', placeholder: 'file.txt' }, { label: 'Dest', placeholder: 'file_copy.txt' }] },
+            { id: 'cp_r', name: 'cp -r', category: 'file', description_mm: 'ဖိုဒါတစ်ခုလုံး ကူးယူရန်။', description_en: 'Copy directory recursively.', template: 'cp -r {0} {1}', params: [{ label: 'Src Folder', placeholder: 'src' }, { label: 'Dst Folder', placeholder: 'dest' }] },
+            { id: 'mv', name: 'mv', category: 'file', description_mm: 'ဖိုင်ရွှေ့ရန် သို့မဟုတ် နာမည်ပြောင်းရန်။', description_en: 'Move/Rename.', template: 'mv {0} {1}', params: [{ label: 'Old', placeholder: 'old.txt' }, { label: 'New', placeholder: 'new.txt' }] },
+            { id: 'rm', name: 'rm', category: 'file', description_mm: 'ဖိုင်ဖျက်ရန်။', description_en: 'Remove file.', template: 'rm {0}', params: [{ label: 'File', placeholder: 'junk.txt' }] },
+            { id: 'rm_rf', name: 'rm -rf', category: 'file', description_mm: 'ဖိုဒါနှင့် အထဲမှဖိုင်အားလုံး အတင်းဖျက်ရန်။ (အထူးသတိထားပါ)', description_en: 'Force remove dir.', template: 'rm -rf {0}', params: [{ label: 'Path', placeholder: '/' }] },
+            { id: 'cat', name: 'cat', category: 'file', description_mm: 'ဖိုင်စာသားအားလုံးကို ဖတ်ရန်။', description_en: 'Display file content.', template: 'cat {0}', params: [{ label: 'File', placeholder: 'config.json' }] },
+            { id: 'tac', name: 'tac', category: 'file', description_mm: 'ဖိုင်စာသားများကို အောက်မှအပေါ် ပြောင်းပြန်ဖတ်ရန်။', description_en: 'Reverse cat.', template: 'tac {0}', params: [{ label: 'File', placeholder: 'list.txt' }] },
+            { id: 'more', name: 'more', category: 'file', description_mm: 'စာမျက်နှာ ရှည်လျားသော ဖိုင်များကို တစ်မျက်နှာစီဖတ်ရန်။', description_en: 'Page through text.', template: 'more {0}', params: [{ label: 'File', placeholder: 'long_file.txt' }] },
+            { id: 'less', name: 'less', category: 'file', description_mm: 'More ထက်ပိုကောင်းသော စာဖတ်သည့် command။ (အပေါ်ပြန်တက်၍ရသည်)', description_en: 'Better file viewer.', template: 'less {0}', params: [{ label: 'File', placeholder: 'large.log' }] },
+            { id: 'head', name: 'head', category: 'file', description_mm: 'ဖိုင်၏ ထိပ်ဆုံး ၁၀ ကြောင်းကို ကြည့်ရန်။', description_en: 'Show first 10 lines.', template: 'head -n {0} {1}', params: [{ label: 'Lines', placeholder: '10' }, { label: 'File', placeholder: 'access.log' }] },
+            { id: 'tail', name: 'tail', category: 'file', description_mm: 'ဖိုင်၏ အောက်ဆုံး ၁၀ ကြောင်းကို ကြည့်ရန်။', description_en: 'Show last 10 lines.', template: 'tail -n {0} {1}', params: [{ label: 'Lines', placeholder: '10' }, { label: 'File', placeholder: 'error.log' }] },
+            { id: 'tail_f', name: 'tail -f', category: 'file', description_mm: 'Log များကို Real-time စောင့်ကြည့်ရန်။', description_en: 'Follow file output.', template: 'tail -f {0}', params: [{ label: 'File', placeholder: '/var/log/syslog' }] },
+            { id: 'nano', name: 'nano', category: 'file', description_mm: 'အလွယ်ကူဆုံး Text Editor။ (ထွက်ချင်လျှင် Ctrl+X နှိပ်ပါ)', description_en: 'Simple text editor.', template: 'nano {0}', params: [{ label: 'File', placeholder: 'index.html' }] },
+            { id: 'vim', name: 'vim', category: 'file', description_mm: 'Pro များသုံးသော Text Editor။ (ထွက်ချင်လျှင် :q! ရိုက်ပါ)', description_en: 'Advanced editor.', template: 'vim {0}', params: [{ label: 'File', placeholder: 'script.py' }] },
+            { id: 'file', name: 'file', category: 'file', description_mm: 'ဖိုင်အမျိုးအစားကို စစ်ဆေးရန် (Image လား Text လား စသဖြင့်)။', description_en: 'Determine file type.', template: 'file {0}', params: [{ label: 'Filename', placeholder: 'unknown.data' }] },
+            { id: 'wc', name: 'wc', category: 'file', description_mm: 'စာကြောင်းရေ၊ စကားလုံးရေ တွက်ရန်။', description_en: 'Word count.', template: 'wc -l {0}', params: [{ label: 'File', placeholder: 'data.csv' }] },
+            { id: 'ln_s', name: 'ln -s', category: 'file', description_mm: 'Shortcut (Symlink) ဖန်တီးရန်။', description_en: 'Create symlink.', template: 'ln -s {0} {1}', params: [{ label: 'Real File', placeholder: '/opt/app' }, { label: 'Link Name', placeholder: '/usr/bin/app' }] },
+            { id: 'find', name: 'find', category: 'file', description_mm: 'ဖိုင်များကို အသေးစိတ်ရှာဖွေရန်။', description_en: 'Search files.', template: 'find {0} -name {1}', params: [{ label: 'Path', placeholder: '.' }, { label: 'Pattern', placeholder: '*.js' }] },
+            
+            // --- NETWORK (16) ---
+            { id: 'ping', name: 'ping', category: 'network', description_mm: 'Connection မိမမိ စစ်ရန်။', description_en: 'Check host availability.', template: 'ping -c {0} {1}', params: [{ label: 'Count', placeholder: '4' }, { label: 'Host', placeholder: '8.8.8.8' }] },
+            { id: 'curl', name: 'curl', category: 'network', description_mm: 'Web Request ပို့ရန်။', description_en: 'Transfer data.', template: 'curl -X {0} {1}', params: [{ label: 'Method', placeholder: 'GET' }, { label: 'URL', placeholder: 'http://localhost' }] },
+            { id: 'curl_head', name: 'curl -I', category: 'network', description_mm: 'Website Header ကိုသာ စစ်ရန်။', description_en: 'Fetch headers.', template: 'curl -I {0}', params: [{ label: 'URL', placeholder: 'https://google.com' }] },
+            { id: 'wget', name: 'wget', category: 'network', description_mm: 'Direct Link မှ ဖိုင်ဒေါင်းရန်။', description_en: 'Download file.', template: 'wget {0}', params: [{ label: 'Link', placeholder: 'https://example.com/file.zip' }] },
+            { id: 'ifconfig', name: 'ifconfig', category: 'network', description_mm: 'Network Config ကြည့်ရန် (Old way)။', description_en: 'Interface config.', template: 'ifconfig', params: [] },
+            { id: 'ip_a', name: 'ip a', category: 'network', description_mm: 'IP Address ကြည့်ရန် (Modern way)။', description_en: 'Show IP info.', template: 'ip a', params: [] },
+            { id: 'netstat', name: 'netstat', category: 'network', description_mm: 'Port များဖွင့်ထားခြင်း ရှိမရှိ စစ်ရန်။', description_en: 'Network statistics.', template: 'netstat -tuln', params: [] },
+            { id: 'ss', name: 'ss', category: 'network', description_mm: 'Netstat ထက်မြန်သော Socket စစ်ဆေးသည့် tool။', description_en: 'Socket stats.', template: 'ss -tuln', params: [] },
+            { id: 'ssh', name: 'ssh', category: 'network', description_mm: 'Remote Server သို့ဝင်ရန်။', description_en: 'SSH Login.', template: 'ssh {0}@{1}', params: [{ label: 'User', placeholder: 'root' }, { label: 'IP', placeholder: '192.168.1.5' }] },
+            { id: 'scp', name: 'scp', category: 'network', description_mm: 'Network မှတစ်ဆင့် ဖိုင်ကူးရန်။', description_en: 'Secure copy.', template: 'scp {0} {1}@{2}:{3}', params: [{ label: 'File', placeholder: 'backup.tar' }, { label: 'User', placeholder: 'root' }, { label: 'IP', placeholder: '1.2.3.4' }, { label: 'Dest', placeholder: '/home/backup' }] },
+            { id: 'nslookup', name: 'nslookup', category: 'network', description_mm: 'Domain name မှ IP ရှာရန်။', description_en: 'DNS lookup.', template: 'nslookup {0}', params: [{ label: 'Domain', placeholder: 'google.com' }] },
+            { id: 'dig', name: 'dig', category: 'network', description_mm: 'DNS Record များကို အသေးစိတ်စစ်ရန်။', description_en: 'DNS info.', template: 'dig {0}', params: [{ label: 'Domain', placeholder: 'example.com' }] },
+            { id: 'traceroute', name: 'traceroute', category: 'network', description_mm: 'Connection လမ်းကြောင်းလိုက်ရန်။', description_en: 'Trace packets.', template: 'traceroute {0}', params: [{ label: 'Host', placeholder: '8.8.8.8' }] },
+            { id: 'nmap', name: 'nmap', category: 'network', description_mm: 'Security စစ်ဆေးရန် Port များကို Scan ဖတ်ခြင်း။', description_en: 'Network exploration.', template: 'nmap {0}', params: [{ label: 'Target IP', placeholder: '192.168.1.1' }] },
+            { id: 'hostname', name: 'hostname', category: 'network', description_mm: 'စက်၏ နာမည်ကိုကြည့်ရန်။', description_en: 'Show hostname.', template: 'hostname', params: [] },
+            { id: 'hostname_i', name: 'hostname -I', category: 'network', description_mm: 'စက်၏ IP ကို အမြန်ကြည့်ရန်။', description_en: 'Show IP address.', template: 'hostname -I', params: [] },
+
+            // --- SYSTEM INFO (15) ---
+            { id: 'df', name: 'df', category: 'system', description_mm: 'Disk Space ကြည့်ရန်။', description_en: 'Disk Free.', template: 'df -h', params: [] },
+            { id: 'du', name: 'du', category: 'system', description_mm: 'Folder တစ်ခု၏ Size ကိုကြည့်ရန်။', description_en: 'Disk Usage.', template: 'du -sh {0}', params: [{ label: 'Path', placeholder: '.' }] },
+            { id: 'free', name: 'free', category: 'system', description_mm: 'RAM လက်ကျန်ကြည့်ရန်။', description_en: 'Memory usage.', template: 'free -m', params: [] },
+            { id: 'top', name: 'top', category: 'system', description_mm: 'System Monitor (CPU/RAM)။', description_en: 'Task manager.', template: 'top', params: [] },
+            { id: 'htop', name: 'htop', category: 'system', description_mm: 'Top ထက်ပိုလှသော Monitor Tool။', description_en: 'Interactive viewer.', template: 'htop', params: [] },
+            { id: 'uname', name: 'uname', category: 'system', description_mm: 'Kernel Version ကြည့်ရန်။', description_en: 'System info.', template: 'uname -r', params: [] },
+            { id: 'uname_a', name: 'uname -a', category: 'system', description_mm: 'System အချက်အလက်အစုံကြည့်ရန်။', description_en: 'All system info.', template: 'uname -a', params: [] },
+            { id: 'uptime', name: 'uptime', category: 'system', description_mm: 'စက်ဖွင့်ထားတာ ဘယ်လောက်ကြာပြီလဲ။', description_en: 'Show runtime.', template: 'uptime', params: [] },
+            { id: 'whoami', name: 'whoami', category: 'system', description_mm: 'လက်ရှိ User နာမည်ကြည့်ရန်။', description_en: 'Current user.', template: 'whoami', params: [] },
+            { id: 'id', name: 'id', category: 'system', description_mm: 'User ID နှင့် Group ID များကြည့်ရန်။', description_en: 'User identity.', template: 'id', params: [] },
+            { id: 'last', name: 'last', category: 'system', description_mm: 'နောက်ဆုံး Login ဝင်ခဲ့သူများစာရင်း။', description_en: 'Last logins.', template: 'last', params: [] },
+            { id: 'history', name: 'history', category: 'system', description_mm: 'ရိုက်ခဲ့သော Command များ။', description_en: 'Cmd history.', template: 'history', params: [] },
+            { id: 'date', name: 'date', category: 'system', description_mm: 'System အချိန်ကြည့်ရန်။', description_en: 'Show date.', template: 'date', params: [] },
+            { id: 'cal', name: 'cal', category: 'system', description_mm: 'ပြက္ခဒိန်ကြည့်ရန်။', description_en: 'Calendar.', template: 'cal', params: [] },
+            { id: 'lscpu', name: 'lscpu', category: 'system', description_mm: 'CPU အချက်အလက်များကြည့်ရန်။', description_en: 'CPU info.', template: 'lscpu', params: [] },
+
+            // --- PROCESS MANAGEMENT (10) ---
+            { id: 'ps', name: 'ps', category: 'process', description_mm: 'Process များကြည့်ရန်။', description_en: 'Snapshot of processes.', template: 'ps aux', params: [] },
+            { id: 'grep_ps', name: 'ps | grep', category: 'process', description_mm: 'Process တစ်ခုကို နာမည်ဖြင့်ရှာရန်။', description_en: 'Find process.', template: 'ps aux | grep {0}', params: [{ label: 'Name', placeholder: 'nginx' }] },
+            { id: 'kill', name: 'kill', category: 'process', description_mm: 'Process ကို PID ဖြင့် ပိတ်ရန်။', description_en: 'Kill process.', template: 'kill {0}', params: [{ label: 'PID', placeholder: '1234' }] },
+            { id: 'kill9', name: 'kill -9', category: 'process', description_mm: 'Process ကို အတင်းရိုက်ချ ပိတ်ပစ်ရန်။', description_en: 'Force kill.', template: 'kill -9 {0}', params: [{ label: 'PID', placeholder: '1234' }] },
+            { id: 'killall', name: 'killall', category: 'process', description_mm: 'Process အားလုံးကို နာမည်ဖြင့်ပိတ်ရန်။', description_en: 'Kill by name.', template: 'killall {0}', params: [{ label: 'Name', placeholder: 'chrome' }] },
+            { id: 'bg', name: 'bg', category: 'process', description_mm: 'Job ကို Background သို့ပို့ရန်။', description_en: 'Background job.', template: 'bg', params: [] },
+            { id: 'fg', name: 'fg', category: 'process', description_mm: 'Background job ကို ရှေ့ပြန်ခေါ်ရန်။', description_en: 'Foreground job.', template: 'fg', params: [] },
+            { id: 'systemctl_start', name: 'systemctl start', category: 'process', description_mm: 'Service တစ်ခုစတင်ရန်။', description_en: 'Start service.', template: 'sudo systemctl start {0}', params: [{ label: 'Service', placeholder: 'apache2' }] },
+            { id: 'systemctl_stop', name: 'systemctl stop', category: 'process', description_mm: 'Service ရပ်တန့်ရန်။', description_en: 'Stop service.', template: 'sudo systemctl stop {0}', params: [{ label: 'Service', placeholder: 'apache2' }] },
+            { id: 'systemctl_status', name: 'systemctl status', category: 'process', description_mm: 'Service အခြေအနေစစ်ရန်။', description_en: 'Service status.', template: 'systemctl status {0}', params: [{ label: 'Service', placeholder: 'mysql' }] },
+
+            // --- PERMISSIONS & USERS (10) ---
+            { id: 'chmod', name: 'chmod', category: 'permission', description_mm: 'ဖိုင် Permission ပြောင်းရန်။ (e.g. 777, +x)', description_en: 'Change mode.', template: 'chmod {0} {1}', params: [{ label: 'Mode', placeholder: '+x' }, { label: 'File', placeholder: 'script.sh' }] },
+            { id: 'chown', name: 'chown', category: 'permission', description_mm: 'Owner ပြောင်းရန်။', description_en: 'Change owner.', template: 'chown {0} {1}', params: [{ label: 'User', placeholder: 'root' }, { label: 'File', placeholder: 'data.txt' }] },
+            { id: 'chgrp', name: 'chgrp', category: 'permission', description_mm: 'Group ပြောင်းရန်။', description_en: 'Change group.', template: 'chgrp {0} {1}', params: [{ label: 'Group', placeholder: 'www-data' }, { label: 'File', placeholder: 'data.txt' }] },
+            { id: 'sudo', name: 'sudo', category: 'permission', description_mm: 'Admin rights ဖြင့် run ရန်။', description_en: 'Superuser do.', template: 'sudo {0}', params: [{ label: 'Command', placeholder: 'apt update' }] },
+            { id: 'su', name: 'su', category: 'permission', description_mm: 'User အကောင့် ပြောင်းရန်။', description_en: 'Switch user.', template: 'su - {0}', params: [{ label: 'Username', placeholder: 'root' }] },
+            { id: 'passwd', name: 'passwd', category: 'permission', description_mm: 'Password ပြောင်းရန်။', description_en: 'Change password.', template: 'passwd {0}', params: [{ label: 'User', placeholder: 'username' }] },
+            { id: 'useradd', name: 'useradd', category: 'permission', description_mm: 'User အသစ်ထည့်ရန်။', description_en: 'Create user.', template: 'sudo useradd -m {0}', params: [{ label: 'Username', placeholder: 'john' }] },
+            { id: 'userdel', name: 'userdel', category: 'permission', description_mm: 'User ဖျက်ရန်။', description_en: 'Delete user.', template: 'sudo userdel {0}', params: [{ label: 'Username', placeholder: 'john' }] },
+            { id: 'groupadd', name: 'groupadd', category: 'permission', description_mm: 'Group အသစ်ဆောက်ရန်။', description_en: 'Add group.', template: 'sudo groupadd {0}', params: [{ label: 'Group', placeholder: 'developers' }] },
+            { id: 'visudo', name: 'visudo', category: 'permission', description_mm: 'Sudoers ဖိုင်ကို ပြင်ရန် (အန္တရာယ်ကင်းသောနည်း)။', description_en: 'Edit sudoers.', template: 'sudo visudo', params: [] },
+
+            // --- PACKAGES (APT/DPKG) (5) ---
+            { id: 'apt_update', name: 'apt update', category: 'package', description_mm: 'Package list များကို refresh လုပ်ရန်။', description_en: 'Update lists.', template: 'sudo apt update', params: [] },
+            { id: 'apt_upgrade', name: 'apt upgrade', category: 'package', description_mm: 'Software များကို version မြှင့်ရန်။', description_en: 'Upgrade pkgs.', template: 'sudo apt upgrade', params: [] },
+            { id: 'apt_install', name: 'apt install', category: 'package', description_mm: 'Software အသစ်သွင်းရန်။', description_en: 'Install pkg.', template: 'sudo apt install {0}', params: [{ label: 'Package', placeholder: 'git' }] },
+            { id: 'apt_remove', name: 'apt remove', category: 'package', description_mm: 'Software ဖျက်ရန်။', description_en: 'Remove pkg.', template: 'sudo apt remove {0}', params: [{ label: 'Package', placeholder: 'vim' }] },
+            { id: 'dpkg_i', name: 'dpkg -i', category: 'package', description_mm: '.deb ဖိုင်ကို install လုပ်ရန်။', description_en: 'Install .deb.', template: 'sudo dpkg -i {0}', params: [{ label: 'File', placeholder: 'package.deb' }] },
+
+            // --- TEXT UTILS (10) ---
+            { id: 'grep', name: 'grep', category: 'text', description_mm: 'စာသားရှာရန်။', description_en: 'Global regex print.', template: 'grep "{0}" {1}', params: [{ label: 'Text', placeholder: 'error' }, { label: 'File', placeholder: 'log.txt' }] },
+            { id: 'awk', name: 'awk', category: 'text', description_mm: 'Column လိုက် စာသားဖြတ်ရန် အသုံးဝင်သည်။', description_en: 'Text processing.', template: "awk '{print ${0}}' {1}", params: [{ label: 'Column No', placeholder: '1' }, { label: 'File', placeholder: 'data.csv' }] },
+            { id: 'sed', name: 'sed', category: 'text', description_mm: 'စာသားအစားထိုးရန် (Find & Replace)။', description_en: 'Stream editor.', template: 'sed "s/{0}/{1}/g" {2}', params: [{ label: 'Old', placeholder: 'foo' }, { label: 'New', placeholder: 'bar' }, { label: 'File', placeholder: 'text.txt' }] },
+            { id: 'sort', name: 'sort', category: 'text', description_mm: 'A-Z စီရန်။', description_en: 'Sort text.', template: 'sort {0}', params: [{ label: 'File', placeholder: 'names.txt' }] },
+            { id: 'uniq', name: 'uniq', category: 'text', description_mm: 'ထပ်နေသော စာကြောင်းများကို ဖယ်ရန်။', description_en: 'Unique lines.', template: 'uniq {0}', params: [{ label: 'File', placeholder: 'names.txt' }] },
+            { id: 'cut', name: 'cut', category: 'text', description_mm: 'စာသားဖြတ်ထုတ်ရန်။', description_en: 'Cut text.', template: 'cut -d"{0}" -f{1} {2}', params: [{ label: 'Delimiter', placeholder: ':' }, { label: 'Field', placeholder: '1' }, { label: 'File', placeholder: '/etc/passwd' }] },
+            { id: 'echo', name: 'echo', category: 'text', description_mm: 'စာသားရိုက်ထုတ်ရန် (သို့) ဖိုင်ထဲရေးထည့်ရန်။', description_en: 'Print text.', template: 'echo "{0}" > {1}', params: [{ label: 'Text', placeholder: 'Hello' }, { label: 'File', placeholder: 'hi.txt' }] },
+            { id: 'wc_l', name: 'wc -l', category: 'text', description_mm: 'စုစုပေါင်း ဘယ်နှကြောင်းရှိလဲ ရေတွက်ရန်။', description_en: 'Count lines.', template: 'wc -l {0}', params: [{ label: 'File', placeholder: 'data.txt' }] },
+            { id: 'diff', name: 'diff', category: 'text', description_mm: 'ဖိုင်နှစ်ခု ကွာခြားချက်ကို ရှာရန်။', description_en: 'Compare files.', template: 'diff {0} {1}', params: [{ label: 'File1', placeholder: 'v1.txt' }, { label: 'File2', placeholder: 'v2.txt' }] },
+            { id: 'tr', name: 'tr', category: 'text', description_mm: 'စာလုံးအကြီးအသေး ပြောင်းရန်။', description_en: 'Translate chars.', template: 'cat {0} | tr "[a-z]" "[A-Z]"', params: [{ label: 'File', placeholder: 'lower.txt' }] },
+
+            // --- MISC / POWER TOOLS (10) ---
+            { id: 'tar_c', name: 'tar create', category: 'misc', description_mm: 'Zip ချုံ့ရန် (Compress)။', description_en: 'Archive.', template: 'tar -czvf {0} {1}', params: [{ label: 'Name', placeholder: 'backup.tar.gz' }, { label: 'Folder', placeholder: 'data/' }] },
+            { id: 'tar_x', name: 'tar extract', category: 'misc', description_mm: 'Zip ဖြည်ရန် (Extract)။', description_en: 'Extract.', template: 'tar -xzvf {0}', params: [{ label: 'File', placeholder: 'backup.tar.gz' }] },
+            { id: 'zip', name: 'zip', category: 'misc', description_mm: '.zip ဖိုင် ချုံ့ရန်။', description_en: 'Zip files.', template: 'zip -r {0} {1}', params: [{ label: 'Name.zip', placeholder: 'code.zip' }, { label: 'Folder', placeholder: 'src/' }] },
+            { id: 'unzip', name: 'unzip', category: 'misc', description_mm: '.zip ဖိုင် ဖြည်ရန်။', description_en: 'Unzip files.', template: 'unzip {0}', params: [{ label: 'File', placeholder: 'code.zip' }] },
+            { id: 'clear', name: 'clear', category: 'misc', description_mm: 'Terminal မျက်နှာပြင် ရှင်းလင်းရန်။', description_en: 'Clear screen.', template: 'clear', params: [] },
+            { id: 'history_c', name: 'history -c', category: 'misc', description_mm: 'History အကုန်ဖျက်ရန်။', description_en: 'Clear history.', template: 'history -c', params: [] },
+            { id: 'alias', name: 'alias', category: 'misc', description_mm: 'Command အတိုကောက်ပြုလုပ်ရန်။', description_en: 'Create alias.', template: 'alias {0}="{1}"', params: [{ label: 'Name', placeholder: 'c' }, { label: 'Command', placeholder: 'clear' }] },
+            { id: 'watch', name: 'watch', category: 'misc', description_mm: 'Command တစ်ခုကို ၂ စက္ကန့်တစ်ခါ run စေရန်။', description_en: 'Watch cmd.', template: 'watch {0}', params: [{ label: 'Command', placeholder: 'ls -l' }] },
+            { id: 'reboot', name: 'reboot', category: 'misc', description_mm: 'စက် Restart ချရန်။', description_en: 'Reboot system.', template: 'sudo reboot', params: [] },
+            { id: 'shutdown', name: 'shutdown', category: 'misc', description_mm: 'စက်ပိတ်ရန်။', description_en: 'Shutdown.', template: 'sudo shutdown now', params: [] }
+        ];
+
+        // --- 2. LOGIC (UNCHANGED FUNCTIONALITY) ---
+        let state = {
+            currentCategory: 'all',
+            searchQuery: '',
+            activeCommand: null
+        };
+
+        const elements = {
+            categoryList: document.getElementById('category-list'),
+            commandGrid: document.getElementById('command-grid'),
+            searchInput: document.getElementById('search-input'),
+            sectionTitle: document.getElementById('section-title'),
+            modal: document.getElementById('generator-modal'),
+            modalContent: document.getElementById('generator-container'),
+            closeModalBtn: document.getElementById('close-modal')
+        };
+
+        function init() {
+            renderCategories();
+            renderCommands();
+            setupEventListeners();
+        }
+
+        function renderCategories() {
+            elements.categoryList.innerHTML = categories.map(cat => `
+                <li>
+                    <button 
+                        class="category-btn ${cat.id === state.currentCategory ? 'active' : ''}" 
+                        data-id="${cat.id}">
+                        ${cat.label}
+                    </button>
+                </li>
+            `).join('');
+        }
+
+        function renderCommands() {
+            let filtered = commands.filter(cmd => {
+                const matchCat = state.currentCategory === 'all' || cmd.category === state.currentCategory;
+                const query = state.searchQuery.toLowerCase();
+                const matchSearch = cmd.name.toLowerCase().includes(query) || 
+                                    cmd.description_mm.includes(query) ||
+                                    cmd.description_en.toLowerCase().includes(query);
+                return matchCat && matchSearch;
+            });
+
+            const currentCatLabel = categories.find(c => c.id === state.currentCategory).label;
+            elements.sectionTitle.textContent = state.searchQuery 
+                ? `Search: "${state.searchQuery}"`
+                : `/bin/${currentCatLabel}`;
+
+            if (filtered.length === 0) {
+                elements.commandGrid.innerHTML = `<p style="color:#666; font-family:'Courier New'; grid-column: 1/-1;">Error 404: Command not found in database.</p>`;
+                return;
+            }
+
+            elements.commandGrid.innerHTML = filtered.map(cmd => `
+                <div class="command-card" data-id="${cmd.id}">
+                    <div class="card-header">
+                        <span class="cmd-name">${cmd.name}</span>
+                        <span class="cmd-tag">${cmd.category}</span>
+                    </div>
+                    <p class="cmd-desc">${cmd.description_mm}</p>
+                    <div class="cmd-syntax">${cmd.template.replace(/\{\d+\}/g, '...')}</div>
+                </div>
+            `).join('');
+        }
+
+        function openGenerator(commandId) {
+            const cmd = commands.find(c => c.id === commandId);
+            if (!cmd) return;
+
+            state.activeCommand = cmd;
+
+            const inputsHtml = cmd.params.map((param, index) => `
+                <div class="input-group">
+                    <label>> ${param.label}</label>
+                    <input 
+                        type="text" 
+                        class="dynamic-input" 
+                        data-index="${index}" 
+                        placeholder="${param.placeholder}"
+                        autocomplete="off"
+                    >
+                </div>
+            `).join('');
+
+            const hasParams = cmd.params.length > 0;
+            
+            const content = `
+                <div class="gen-header">
+                    <h3>$ ${cmd.name}</h3>
+                    <p># ${cmd.description_en}</p>
+                </div>
+                
+                ${hasParams ? inputsHtml : '<p style="color:#0f0; margin-bottom:1rem;">No parameters required.</p>'}
+                
+                <div class="code-preview">
+                    <code id="final-code">${cmd.template.replace(/\{\d+\}/g, match => {
+                        const index = parseInt(match.match(/\d+/)[0]);
+                        return cmd.params[index].placeholder;
+                    })}</code>
+                    <button id="copy-btn" class="btn-primary">CPY</button>
+                </div>
+            `;
+
+            elements.modalContent.innerHTML = content;
+            elements.modal.classList.remove('hidden');
+
+            const firstInput = elements.modalContent.querySelector('input');
+            if(firstInput) firstInput.focus();
+
+            const inputs = elements.modalContent.querySelectorAll('.dynamic-input');
+            inputs.forEach(input => {
+                input.addEventListener('input', updateCodePreview);
+            });
+
+            const copyBtn = document.getElementById('copy-btn');
+            if(copyBtn) copyBtn.addEventListener('click', copyToClipboard);
+        }
+
+        function updateCodePreview() {
+            const cmd = state.activeCommand;
+            const inputs = Array.from(elements.modalContent.querySelectorAll('.dynamic-input'));
+            
+            let finalString = cmd.template;
+            
+            inputs.forEach((input, index) => {
+                let value = input.value.trim();
+                if (!value) value = cmd.params[index].placeholder;
+                finalString = finalString.replace(`{${index}}`, value);
+            });
+
+            document.getElementById('final-code').textContent = finalString;
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('final-code').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = "OK!";
+                btn.style.backgroundColor = "#fff";
+                btn.style.color = "#000"; 
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.backgroundColor = "";
+                    btn.style.color = "";
+                }, 1000);
+            });
+        }
+
+        function setupEventListeners() {
+            elements.searchInput.addEventListener('input', (e) => {
+                state.searchQuery = e.target.value;
+                renderCommands();
+            });
+
+            elements.categoryList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('category-btn')) {
+                    state.currentCategory = e.target.dataset.id;
+                    renderCategories(); 
+                    renderCommands();
+                }
+            });
+
+            elements.commandGrid.addEventListener('click', (e) => {
+                const card = e.target.closest('.command-card');
+                if (card) {
+                    openGenerator(card.dataset.id);
+                }
+            });
+
+            elements.closeModalBtn.addEventListener('click', () => {
+                elements.modal.classList.add('hidden');
+            });
+
+            elements.modal.addEventListener('click', (e) => {
+                if (e.target === elements.modal) {
+                    elements.modal.classList.add('hidden');
+                }
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if(e.key === "Escape" && !elements.modal.classList.contains('hidden')) {
+                     elements.modal.classList.add('hidden');
+                }
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
